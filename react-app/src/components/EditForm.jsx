@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {data} from "./userData"
 
 const EditForm = () => {
@@ -8,6 +8,53 @@ const EditForm = () => {
 const { id } = useParams();
 const dataToEdit = data.users.filter((item)=>item.id==id);
   const [userData, setUserData] = useState(dataToEdit[0]);
+  const totalAddress = dataToEdit[0].addresses.length;
+  const lastAddressId = dataToEdit[0].addresses[totalAddress-1].id;
+  const [currentId, setCurrentId] = useState(lastAddressId);
+  const totalPhoneNumber = dataToEdit[0].phoneNumbers.length;
+  const lastPhoneNumberId = dataToEdit[0].phoneNumbers[totalPhoneNumber-1].id;
+  const [currentPhoneId, setCurrentPhoneId] = useState(lastPhoneNumberId);
+
+  // const newAddressId = lastAddress.id + 1;
+  debugger
+  const navigate = useNavigate();
+
+  const newAddress = {
+    id: currentId+1,
+    add_line1: "",
+    add_line2: "",
+    zipcode: "",
+    city: "",
+    state: "",
+    country: "",
+  };
+
+  const newPhoneNumber = {
+    id: currentPhoneId+1,
+    phone_number:""
+  }
+
+  const addAnotherPhoneNumber = ()=>{
+    setCurrentPhoneId((prev)=>prev+1);
+    const updatedPhone = [...userData.phoneNumbers, newPhoneNumber];
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      phoneNumbers: updatedPhone,
+    }));
+  
+  }
+
+  const onAddressAddHandler = ()=>{
+    debugger
+    console.log(currentId, typeof(currentId))
+    setCurrentId((prev)=>prev+1);
+    const updatedAddresses = [...userData.addresses, newAddress];
+    setUserData((prevUserData) => ({
+      ...prevUserData,
+      addresses: updatedAddresses,
+    }));
+  
+  }
 
   const handleAddressChange = (e, addressId, field) => {
     setUserData((prevUserData) => ({
@@ -38,6 +85,10 @@ const dataToEdit = data.users.filter((item)=>item.id==id);
 
   const onSubmitHandler = ()=>{
     console.log(userData);
+    debugger
+
+    // lastly navigate to useData page
+    navigate("/")
   }
 
   return (
@@ -217,6 +268,20 @@ const dataToEdit = data.users.filter((item)=>item.id==id);
         ))}
       </div>
       <div className="mt-3 d-flex justify-content-end">
+      <div>
+          <button
+            onClick={addAnotherPhoneNumber}
+            className="btn btn-md btn-primary me-3"
+          >
+            Add Other Phone Number
+          </button>
+          <button
+            onClick={onAddressAddHandler}
+            className="btn btn-md btn-primary"
+          >
+            Add Other Address
+          </button>
+        </div>
         <div className="ms-3">
           <button
             className="btn btn-md btn-danger me-3"

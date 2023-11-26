@@ -105,7 +105,7 @@ const User = () => {
           </tbody>
         </table>
         <div className="row">
-          <Link to="/add-user" className="btn btn-sm btn-primary">
+          <Link to="/add-user" className="btn btn-lg btn-primary">
             Add User
           </Link>
         </div>
